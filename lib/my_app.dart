@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:crud_v2/contato_formulario.dart';
+import 'package:crud_v2/contato_lista.dart';
 
 class MyApp extends StatelessWidget {
   // this widget is the root of your application
