@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class MyApp extends StatelessWidget {
@@ -15,8 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'Contato',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 35, 38, 204)),
+        primarySwatch: Colors.teal,
       ),
       routes: {
         HOME: (context) => MyContatoList(),
