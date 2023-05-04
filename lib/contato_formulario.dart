@@ -100,4 +100,25 @@ class ContatoFormulario extends StatelessWidget {
     }
     return null;
   }
+
+  void _consultar() async {
+    final todasLinhas = await dbHelper.queryAllRows();
+    print('Consulta todas as linhas:');
+    todasLinhas.forEach((row) => print(row));
+  }
+
+  _sendForm() async {
+    if (_key.currentState!.validate()) {
+      // sem erros na validação
+      _key.currentState!.save();
+      print("Nome $nome");
+      print("Idade $idade");
+      Map<String, dynamic> row = {
+        DatabaseHelper.columNome: nome,
+        DatabaseHelper.columIdade: idade,
+      };
+      final id = await dbHelper.insert(row);
+      print('linha inserida id: $id');
+    }
+  }
 }
