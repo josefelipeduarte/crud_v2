@@ -61,8 +61,8 @@ class ContatoFormulario extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).pop();
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MyContatoList()));
+            //Navigator.push(context,
+            // MaterialPageRoute(builder: (context) => MyContatoList()));
           },
           child: Text('Listar'),
         ),
@@ -119,6 +119,8 @@ class ContatoFormulario extends StatelessWidget {
       };
       final id = await dbHelper.insert(row);
       print('linha inserida id: $id');
+    } else {
+      print('erro de validação');
     }
   }
 }
