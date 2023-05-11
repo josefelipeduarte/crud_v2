@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:crud_v2/database_helper.dart';
@@ -108,18 +109,82 @@ Widget build(BuildContext context){
                       iconRemoveButton(context,()){
                         _back.remove(Contato.id);
                         WidgetsBinding.instance.addPostFrameCallback((_){ 
-
+                          Navigator.of(context).setState(() {
+                            _buscar();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pushNamed(MyApp.CONTATO_LIST);
+                          });
                         });
                       }
                     ],
                   ),
                 ),
-              )
-            }
-          )
+              );
+            });
         }
-      },
-      )
-    }),
+      });
+    });
   )
+}
+
+class MyContatoList extends StatefulWidget {
+  @override
+  State<MyContatoList> createState() => _MyContatoListState();
+}
+
+class _MyContatoListState extends State<MyContatoList> {
+var selectedIndex = 0;
+
+@override
+Widget build(BuildContext context){
+  Widget page;
+  switch (selectedIndex){
+    case 0:
+    page = ContatoList();
+    break;
+    case 1:
+    page = ContatoFormulario();
+    break;
+    default:
+    throw UnimplementedError('No widget for $selectedIndex');
+  }
+}
+return LayoutBuilder (
+  builder: (context, constraints){
+    return Scaffold(
+      body: Row (
+        children: [
+          SafeArea(
+            child: NavigationRail (
+              extended: constraints.maxWidth >= 600,
+              destinations: [
+                NavigationRailDestination(
+                  icon: Icon(Icons.format_list_bulleted),
+                  label: Text('Lista'),
+                ),
+                NavigationRailDestination(
+                icon: Icon(Icons.contact_page_outlined), 
+                label: Text('Cadastro de contato'),
+                ),
+              ],
+              selectedIndex: selectedIndex,
+              onDestinationSelected: (value){
+                setState((){
+                  selectedIndex = value;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: page,
+            ),
+            ),
+        ],
+      ),
+    )
+  }
+)
 }
