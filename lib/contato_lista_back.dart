@@ -34,4 +34,24 @@ abstract class _ContatoListBack with Store {
     print('Passou no construtor e chamou o refresh');
     refreshList();
   }
+
+  //metodo para chamar o form salvar/alterar
+  goToForm(BuildContext context, [Contato? contato]) {
+    print('passou no goToForm');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context)
+          .pushNamed(MyApp.CONTATO_FORM, arguments: contato)
+          .then(refreshList);
+    });
+  }
+
+  goToDetails(BuildContext context, Contato contato) {
+    //desativado
+  }
+
+  //excluir
+  remove(dynamic id) {
+    dbHelper.delete(id);
+    refreshList();
+  }
 }

@@ -1,3 +1,4 @@
+//Classe que puxa os dados.
 import 'package:flutter/material.dart';
 import 'package:crud_v2/my_app.dart';
 

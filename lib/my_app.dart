@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.teal,
       ),
       routes: {
-        //HOME: (context) => MyContatoList(),
+        HOME: (context) => MyContatoList(),
         CONTATO_FORM: (context) => ContatoFormulario(),
-        //CONTATO_LIST: (context) => MyContatoList(),
+        CONTATO_LIST: (context) => MyContatoList(),
       },
     );
   }
