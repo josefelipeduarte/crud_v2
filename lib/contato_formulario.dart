@@ -1,16 +1,21 @@
+import 'package:crud_v2/contato.dart';
+import 'package:crud_v2/contato_formulario_back.dart';
 import 'package:crud_v2/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:crud_v2/contato_formulario.dart';
 import 'package:crud_v2/contato_lista.dart';
+import 'package:crud_v2/contato_lista_back.dart';
 
 class ContatoFormulario extends StatelessWidget {
   GlobalKey<FormState> _key = GlobalKey();
   bool _validate = false;
   late String nome, email, idade;
   final dbHelper = DatabaseHelper.instance;
+  Contato? contato;
 
   @override
   Widget build(BuildContext context) {
+    var _back = ContatoFormularioBack(context);
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.teal,
@@ -25,7 +30,7 @@ class ContatoFormulario extends StatelessWidget {
             child: Form(
               key: _key,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: _formUI(context),
+              child: _formUI(context, _back),
             ),
           ),
         ),
@@ -33,9 +38,21 @@ class ContatoFormulario extends StatelessWidget {
     );
   }
 
-  Widget _formUI(BuildContext context) {
+  Widget _formUI(BuildContext context, ContatoFormularioBack _back) {
     var _controller = TextEditingController();
     var _controller2 = TextEditingController();
+
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      contato = ModalRoute.of(context)!.settings.arguments as Contato;
+    }
+
+    if (contato == null) {
+      print('contato nulo');
+    } else {
+      _controller.text = _back.contato.nome!;
+      _controller2.text = _back.contato.idade!.toString();
+    }
+
     return Column(
       children: <Widget>[
         TextFormField(
@@ -45,6 +62,7 @@ class ContatoFormulario extends StatelessWidget {
           validator: _validarNome,
           onSaved: (String? val) {
             nome = val!;
+            (newValue) => _back.contato.nome = newValue;
           },
         ),
         TextFormField(
@@ -55,14 +73,15 @@ class ContatoFormulario extends StatelessWidget {
             validator: _validarIdade,
             onSaved: (String? val) {
               idade = val!;
+              (newValue) => _back.contato.nome = newValue;
             }),
         SizedBox(height: 15.0),
         ElevatedButton(onPressed: _sendForm, child: Text('Enviar')),
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).pop();
-            //Navigator.push(context,
-            // MaterialPageRoute(builder: (context) => MyContatoList()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyContatoList()));
           },
           child: Text('Listar'),
         ),
@@ -113,12 +132,23 @@ class ContatoFormulario extends StatelessWidget {
       _key.currentState!.save();
       print("Nome $nome");
       print("Idade $idade");
+
       Map<String, dynamic> row = {
         DatabaseHelper.columNome: nome,
         DatabaseHelper.columIdade: idade,
       };
-      final id = await dbHelper.insert(row);
-      print('linha inserida id: $id');
+      if (contato == null) {
+        final id = await dbHelper.insert(row);
+        print('linha inserida id: $id');
+      } else {
+        Map<String, dynamic> row = {
+          DatabaseHelper.columNome: nome,
+          DatabaseHelper.columIdade: idade,
+          DatabaseHelper.columId: contato?.id,
+        };
+        final id2 = await dbHelper.update(row);
+        print('linha alterada id: $id2');
+      }
     } else {
       print('erro de validação');
     }
